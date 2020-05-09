@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pair Game</title>
+	<style>
+		button{
+			font-size: 25px;
+			margin : 5px;
+			width: 50px;
+			height: 50px;
+		}
+
+		.clicked{
+			background-color: gray;
+		}
+
+		.matched{
+			background-color: yellow;
+		}
+	</style>
+</head>
+<body onload="init()">
+	<h2>開心對對碰</h2>
+	<div id="pairArea">
+		
+	</div>
+</body>
+<script type="">
+	var pairContentA = ['A','B','C','D','E','F','G','H'];
+	var pairContentB = ['a','b','c','d','e','f','g','h'];
+	var buttonsInOneLine = 4;
+	var buttonClicked = [];
+
+	var pairTotal = pairContentA.concat(pairContentB);
+
+
+	//after clicked, button change color
+	//two button clicked, trigger ismatch function
+	function init()
+	{
+		btnClickedCount = 0;
+		//shuffle
+		var pairTotal = pairContentA.concat(pairContentB);
+		pairTotal = shuffleTheArray(pairTotal);
+		//generate button
+		var pairAreaEle = document.getElementById('pairArea');
+		var btnStringBefore = '<button';
+		var btnStringEnd = '</button>';
+		var btnString = '';
+		for(var i in pairTotal)
+		{
+			//console.log(i,pairTotal[i]);
+			btnString = btnStringBefore + ' id="btn' + pairTotal[i] + '" onclick=' + '"btnOnClick(this.id)">'+ pairTotal[i] + btnStringEnd;
+			//console.log(btnString);
+			pairAreaEle.innerHTML = pairAreaEle.innerHTML + btnString;
+			
+			if(i%buttonsInOneLine == (buttonsInOneLine-1))
+			{
+				pairAreaEle.innerHTML = pairAreaEle.innerHTML + '<br>';
+			}
+		}
+	}
+
+	function btnOnClick(btnid)
+	{
+		console.log('btnC : ',btnid);
+		var btnEle = document.getElementById(btnid);
+		if(btnEle.classList.contains("clicked") || btnEle.classList.contains("matched"))
+		{
+			return;
+		}
+		else
+		{
+			buttonClicked.push(btnEle.id);
+			btnEle.classList.add("clicked");
+			if(buttonClicked.length >= 2)
+			{
+				areButtonMatch();
+			}
+		}
+	}
+
+	function areButtonMatch()
+	{
+		//sleep(500);
+		console.log(buttonClicked);
+		var ele1 = document.getElementById(buttonClicked[0]);
+		var ele2 = document.getElementById(buttonClicked[1]);
+		ele1.classList.remove('clicked');
+		ele2.classList.remove('clicked');
+		var idx1 = pairContentA.indexOf(ele1.innerHTML)!=-1 ? pairContentA.indexOf(ele1.innerHTML) : pairContentB.indexOf(ele1.innerHTML);
+		var idx2 = pairContentA.indexOf(ele2.innerHTML)!=-1 ? pairContentA.indexOf(ele2.innerHTML) : pairContentB.indexOf(ele2.innerHTML);
+		console.log('idx : ',idx1,idx2);
+		if( idx1 == idx2)
+		{
+			console.log('Matched!');
+			ele1.classList.add('matched');
+			ele2.classList.add('matched');
+		}
+		else
+		{
+			console.log('Not Matched!');
+		}
+		
+		buttonClicked = [];
+	}
+
+	function shuffleTheArray(arr)
+	{
+		return arr.sort(() => Math.random() - 0.5);
+	}
+
+	function getRandomNumer(start, end)
+	{
+		return randomNumb = Math.floor(Math.random() * (start-end+1))+start; 
+	}
+
+	function sleep(milliseconds) {
+	  const date = Date.now();
+	  let currentDate = null;
+	  do {
+	    currentDate = Date.now();
+	  } while (currentDate - date < milliseconds);
+	}
+</script>
+</html>
